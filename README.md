@@ -37,7 +37,7 @@ Now, once you pick a set you wish to play you move on to the main game screen. O
 
 Lastly, if you reach the end of the set, then a page tells you how you've performed in that set, tells you how many stars you've earned, if you've reached a new high score for that set and also shows you your total score in the game.
 
-![Help Screen](http://i.imgur.com/PXrbxqT.png) &nbsp; &nbsp; &nbsp; &nbsp; ![End Screen](http://i.imgur.com/t3WmZ16.png)
+![Help Screen](http://i.imgur.com/PXrbxqT.png) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ![End Screen](http://i.imgur.com/t3WmZ16.png)
 
 
 
