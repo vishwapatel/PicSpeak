@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">PicSpeak</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="welcome">Welcome to PicSpeak!</string>
+    <string name="diff">Choose a difficulty</string>
+    <string name="cat">Choose a category</string>
+    <string-array name="stimulus_array">
+        <item>Non Living Things</item>
+        <item>Living Things</item>
+    </string-array>
+    <string-array name="difficulty_array">
+        <item>Easy</item>
+        <item>Medium</item>
+        <item>Hard</item>
+    </string-array>
+    <string-array name="nonlivingthingseasy">
+        <item >banana</item>
+        <item >box</item>
+        <item >table</item>
+        <item >chair</item>
+        <item >book</item>
+        <item >door</item>
+        <item >clock</item>
+        <item >cup</item>
+        <item >plate</item>
+        <item >hat</item>
+        <item >grapes</item>
+    </string-array>
+    <string-array name="livingthingseasy">
+        
+    </string-array>
+   <string-array name="nonlivingthingshard">
+      
+        <item>freezer</item>
+        <item>stadium</item>
+        <item>icicle</item>
+        <item>marker</item>
+        <item>parachute</item>
+        <item>motorcycle</item>
+        <item>toothbrush</item>
+        <item>spatula</item>
+        <item>boomerang</item>
+        <item>calculator</item>
+    </string-array>
+    <string-array name="livingthingshard">
+        
+    </string-array>
+    
+        <string-array name="nonlivingthingsmedium">
+        <item>darts</item>
+        <item>pyramid</item>
+        <item>bicycle</item>
+        <item>camera</item>
+        <item>scissors</item>
+        <item>elevator</item>
+        <item>bubble</item>
+        <item>shovel</item>
+        <item>cinnamon</item>
+        <item>radio</item>
+    </string-array>
+    
+    <color name="yellow">#EBC06A</color>
+	<color name="green">#288C8C</color>
+    <color name="grey">#333333</color>
+    <color name="white">#FFFFFF</color>
+    
+</resources>
+

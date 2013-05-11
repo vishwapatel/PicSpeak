@@ -1,0 +1,140 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@color/grey"
+tools:context=".MainActivity" >
+        
+	<LinearLayout
+		android:id="@+id/topbar"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal">
+
+		<Button
+		    android:id="@+id/hintbuttona"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_marginLeft="15dp"
+		    android:layout_marginTop="15dp"
+		    android:layout_weight="2"
+		    android:textSize="25dp" 
+		    android:text="Phrase"
+		    android:drawableTop="@drawable/hint_phrase" />
+
+		<Button
+		    android:id="@+id/hintbuttonb"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_marginLeft="25dp"
+		    android:layout_marginTop="15dp"
+		    android:textSize="25dp" 
+		    android:layout_weight="2"
+		    android:text="Rhyme"
+		    android:drawableTop="@drawable/hint_rhyme" />
+		
+		<Button
+		    android:id="@+id/hintbuttonc"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_marginLeft="25dp"
+		    android:layout_marginTop="15dp"
+		    android:textSize="25dp"	
+		    android:layout_weight="2"
+		    android:text="Word"
+		    android:drawableTop="@drawable/hint_word" />
+		
+		<LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="15dp"
+            android:layout_weight="2"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/scoretext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Score"
+                android:textColor="@color/yellow"
+                android:textSize="35dp" />
+
+            <TextView
+                android:id="@+id/score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:text="0"
+                android:textColor="@color/yellow"
+                android:textSize="40dp" />
+            
+        </LinearLayout>
+		
+	</LinearLayout>
+		
+		<ImageView
+		android:id="@+id/image"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/progressBarGame"
+		android:layout_above="@+id/bottombar"
+		android:cropToPadding="true"
+		android:maxHeight="500dp"
+		android:adjustViewBounds="true"
+		android:scaleType="fitCenter"
+		android:layout_centerHorizontal="true"
+		android:layout_centerVertical="true"/>
+		
+		 <ProgressBar
+            android:id="@+id/progressBarGame"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="fill_parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="25dp"
+            android:layout_below="@+id/topbar"
+            android:layout_height="wrap_content" android:max="100"/>
+		 
+	    
+	
+	<RelativeLayout 
+		android:id="@+id/bottombar"
+		android:layout_alignParentBottom="true"
+		android:layout_width="fill_parent"
+		android:layout_height="120dp">
+	    
+	    <Button 
+	        android:id="@+id/helpbutton"
+	        android:layout_marginTop="15dp"
+	        android:layout_marginBottom="15dp"
+	        android:layout_alignParentLeft="true"
+	        android:text="Help"
+	        android:layout_width="100dp"
+	        android:textSize="20dp" 
+	        android:layout_height="match_parent"
+	        android:drawableTop="@drawable/help"/>
+	  
+	    <Button 
+	        android:id="@+id/micbutton"
+	        android:layout_centerInParent="true"
+	        android:background="@drawable/mic_clear"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"/>
+	   
+	   	<Button 
+	        android:id="@+id/skipbutton"
+	        android:layout_marginTop="15dp"
+	        android:layout_marginBottom="15dp"
+	        android:layout_alignParentRight="true"
+	        android:layout_width="100dp"
+	        android:textSize="20dp" 
+	        android:layout_height="match_parent"
+	        android:text="Skip"
+	        android:drawableTop="@drawable/skip" />
+	    
+	</RelativeLayout>
+
+</RelativeLayout>
