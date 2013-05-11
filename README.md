@@ -1,6 +1,6 @@
 # [PicSpeak](https://play.google.com/store/apps/details?id=com.vishwa.picspeak) #
 
-[PicSpeak](https://play.google.com/store/apps/details?id=com.vishwa.picspeak) is an Android app for Tablets that has been primarily designed for [aphasia](http://en.wikipedia.org/wiki/Aphasia) patients and their rehabilitation therapists. ** However, PicSpeak can also be used by parents to teach their kids new words through association with some image of that word. ** PicSpeak is a modernized mobile gamified approach to an existing (and slightly outdated) aphasia therapy software called [MossTalk Words](http://www.mosstalkwords.com/). Most aphasia patients suffer from these symptoms:
+[PicSpeak](https://play.google.com/store/apps/details?id=com.vishwa.picspeak) is an Android app for Tablets available on Google Play (App Store) that has been primarily designed for [aphasia](http://en.wikipedia.org/wiki/Aphasia) patients and their rehabilitation therapists. ** However, PicSpeak can also be used by parents to teach their kids new words through association with some image of that word. ** PicSpeak is a modernized mobile gamified approach to an existing (and slightly outdated) aphasia therapy software called [MossTalk Words](http://www.mosstalkwords.com/). Most aphasia patients suffer from these symptoms:
 - inability to name objects
 - inability to form words
 - poor enunciation
@@ -37,7 +37,7 @@ Now, once you pick a set you wish to play you move on to the main game screen. O
 
 Lastly, if you reach the end of the set, then a page tells you how you've performed in that set, tells you how many stars you've earned, if you've reached a new high score for that set and also shows you your total score in the game.
 
-![Help Screen](http://i.imgur.com/PXrbxqT.png) ![End Screen](http://i.imgur.com/t3WmZ16.png)
+![Help Screen](http://i.imgur.com/PXrbxqT.png)        ![End Screen](http://i.imgur.com/t3WmZ16.png)
 
 
 
