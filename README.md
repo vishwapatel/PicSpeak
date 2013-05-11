@@ -10,11 +10,11 @@
 Here's how the app works:
 
 When you open the app, you see a selection screen to pick the set you would like to play with. As you can see below, some levels/sets are locked. You can also see three starts next to each set. These represent your progress through that set. One star means you've completed six out of the 10 stimuli in that set, two mean you've completed 8 out of 10 and three stars mean you've aced the set! When you get at least one star in one of the sets you then unlock the more difficult version of that stimulus set.
-![Selection Screen](http://imgur.com/6Rx8qm7)
+![Selection Screen](http://i.imgur.com/6Rx8qm7.png)
 
 Now, once you pick a set you wish to play you move on to the main game screen. On the main game screen, you can see the following things:
 
-![Main Screen](http://imgur.com/0UNpsCx)
+![Main Screen](http://i.imgur.com/0UNpsCx.png)
 
 1. Hint buttons:
 	- Phrase hint: The app reads out a funny phrase that contains the answer but doesn't include the answer itself.
@@ -37,7 +37,7 @@ Now, once you pick a set you wish to play you move on to the main game screen. O
 
 Lastly, if you reach the end of the set, then a page tells you how you've performed in that set, tells you how many stars you've earned, if you've reached a new high score for that set and also shows you your total score in the game.
 
-![Help Screen](http://imgur.com/PXrbxqT) ![End Screen](http://imgur.com/t3WmZ16)
+![Help Screen](http://i.imgur.com/PXrbxqT.png) ![End Screen](http://i.imgur.com/t3WmZ16.png)
 
 
 
