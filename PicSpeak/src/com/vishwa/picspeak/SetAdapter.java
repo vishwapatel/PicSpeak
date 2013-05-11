@@ -24,17 +24,7 @@ import android.widget.TextView;
 			this.context = context;
 			this.data = data;
 		}
-		/*@Override
-		public boolean isEnabled (int position){
-			Set currset = data.get(position);
-			if (currset.locked){
-				return false;
-			}
-			else{
-				return true;
-			}
-		}
-		*/
+
 		@Override
 	    public View getView(int position, View convertView, ViewGroup parent) {
 	        View row = convertView;

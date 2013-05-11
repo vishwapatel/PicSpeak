@@ -1,18 +1,10 @@
 package com.vishwa.picspeak;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 public class StatsDbAdapter extends SQLiteOpenHelper {
 	 
@@ -37,12 +29,9 @@ public class StatsDbAdapter extends SQLiteOpenHelper {
     private static final String KEY_SUCCESS = "sucess";
     
     private SQLiteDatabase db;
- 
-    private Context ctx;
     
     public StatsDbAdapter(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        ctx = context;
     }
  
     // Creating Tables
@@ -52,7 +41,6 @@ public class StatsDbAdapter extends SQLiteOpenHelper {
     			"%s INTEGER NOT NULL, %s INTEGER NOT NULL, %s INTEGER NOT NULL, %s INTEGER NOT NULL, %s INTEGER NOT NULL, %s TEXT NOT NULL, %s INTEGER NOT NULL)",
     			TABLE_STATS, KEY_WORD, KEY_NUM_TRIES, KEY_NUM_HINTS, KEY_HINT_WORD, KEY_HINT_PHRASE,
     			KEY_HINT_RHYME, KEY_GUESS, KEY_SUCCESS);
-    	Log.d("statsdbadapter", "CREATE TABLE STATEMENT ==== "+CREATE_STATS_TABLE);
         db.execSQL(CREATE_STATS_TABLE);
     }
  
@@ -62,7 +50,6 @@ public class StatsDbAdapter extends SQLiteOpenHelper {
         // Drop older table if existed
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_STATS);
  
-        Log.d("statsdbadapter", "onUpgrade called!");
         // Create tables again
         onCreate(db);
     }
@@ -105,7 +92,6 @@ public class StatsDbAdapter extends SQLiteOpenHelper {
     	StringBuffer email_body = new StringBuffer();
         if(cursor != null)
         {
-//        	email_body.append("WORD\tUSER GUESS\tNUM OF TRIES\tNUM HINTS USED\tRHYME USED\tPHRASE USED\tWORD USED\tSUCCEEDED\n");
         	while(cursor.moveToNext())
         	{
         		String word = cursor.getString(cursor.getColumnIndex(KEY_WORD));
@@ -125,8 +111,8 @@ public class StatsDbAdapter extends SQLiteOpenHelper {
         	    email_body.append(String.format("Phrase hint used: %s\n", phrase_used));
         	    email_body.append(String.format("Word hint used: %s\n", word_used));
         	    email_body.append(String.format("User succeded: %s\n", phrase_used));
+        	    email_body.append(String.format("Succeded: %s\n", success));
         	    email_body.append("\n\n");
-        		Log.d("statsdbadapter", email_body.toString());
         	}
         	String result = email_body.toString();
         	return result;

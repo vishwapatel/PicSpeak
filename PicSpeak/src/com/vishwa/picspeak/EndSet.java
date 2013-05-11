@@ -11,20 +11,19 @@ import android.widget.TextView;
 
 public class EndSet extends Activity {
 
-	public String set;
-	public int setscore;
-	public boolean newStreak;
-	public boolean newNumCorrect;
+	private String set;
+	private int setscore;
+	private boolean newStreak;
+	private boolean newNumCorrect;
 	
-	//public for testing purposes
-	public TextView totalscoretext;
-	public TextView setscoretext;
-	public TextView highscoretext;
-	public ImageView highscorestamp;
-	public TextView correct;
-	public ImageView star1;
-	public ImageView star2;
-	public ImageView star3;
+	private TextView totalscoretext;
+	private TextView setscoretext;
+	private TextView highscoretext;
+	private ImageView highscorestamp;
+	private TextView correct;
+	private ImageView star1;
+	private ImageView star2;
+	private ImageView star3;
 	
 	
 	public void onCreate(Bundle savedInstanceState){

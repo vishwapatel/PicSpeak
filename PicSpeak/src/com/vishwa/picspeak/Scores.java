@@ -1,14 +1,10 @@
 package com.vishwa.picspeak;
 
-import java.io.Serializable;
-
 import android.content.Context;
-import android.database.Cursor;
 
 public class Scores{
 
 	private int total_score;
-	private int [] high_scores;
 	private int highest_streak;
 
 	public ScoresDbAdapter scoresDb;
@@ -17,7 +13,6 @@ public class Scores{
 	 */
 	public Scores(Context ctx) {
 		total_score = 0;
-		high_scores = new int[6];
 		scoresDb = new ScoresDbAdapter(ctx);
 		scoresDb.open();
 	}

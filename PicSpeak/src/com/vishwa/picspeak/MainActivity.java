@@ -5,21 +5,15 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 import android.speech.tts.TextToSpeech;
-
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.ByteArrayBuffer;
 
 import android.app.Activity;
@@ -34,7 +28,6 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -45,11 +38,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
@@ -282,18 +272,13 @@ public class MainActivity extends Activity {
 							FileOutputStream outputStream = new FileOutputStream(file);
 							outputStream.write(baf.toByteArray());
 							outputStream.close();
-							Log.i("info", file.getAbsolutePath() + "saved it!");
-						}
-						else{
-							Log.i("info", file.getAbsolutePath() + "  exists!");
 						}
 					}
 				} 
 			}
 			catch (MalformedURLException e1) {
-				Log.i("info", "MalformedURL exception!");
-			} catch (IOException e) {
-				Log.i("info", "IO exception!");
+			} 
+			catch (IOException e) {
 			}
 			return null;
 		}
@@ -364,7 +349,6 @@ public class MainActivity extends Activity {
 				//read a line, based on which line number it is, we know what kind of hint it is
 				//all based on text file conventions
 				while ((lineRead = hintReader.readLine()) != null){
-					Log.i("info", lineRead);
 					switch(linenumber) {
 					case 0: word = lineRead; break;
 					case 1: sentence = lineRead; break;
@@ -373,11 +357,7 @@ public class MainActivity extends Activity {
 						Rhyme2 = lineRead; 
 						if(!word.equals("") && !sentence.equals("") && !Rhyme1.equals("") && !Rhyme2.equals("")){
 							String [] hts = {sentence, Rhyme1, Rhyme2};
-							Log.i("info", word + " " + Rhyme1 );
 							hints.put(word, hts);
-						}
-						else{
-							Log.i("info", "Hints loading issue!");
 						}
 						break;
 					}
@@ -408,7 +388,6 @@ public class MainActivity extends Activity {
 		currBitmap = null;
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		if(!(new File(buildCachePath(".jpg"))).exists()){
-			Log.i("info","image does not exist");
 			AsyncTask<URL, Void, Bitmap> loadImage = new MissingImageTask().execute(new URL(bucketSite + _currentPath + 
 					"/" + _currentSet.get(_currentIndex) + ".jpg"));
 			}
@@ -429,7 +408,6 @@ public class MainActivity extends Activity {
 			 currBitmap = BitmapFactory.decodeFile(buildCachePath(".jpg"),options);
 		}
 		catch(Exception e){
-			Log.i("info", "Bitmap Exception!");
 		}	
 		if (currBitmap != null){
 			//If it's the first image of the set, just display it
@@ -485,8 +463,6 @@ public class MainActivity extends Activity {
 		}
 		else {
 			String text = "";
-			Log.i("info", _currentSet.get(_currentIndex));
-			Log.i("info", Arrays.toString(hints.get(_currentSet.get(_currentIndex))));
 			String[] hintarray = hints.get(_currentSet.get(_currentIndex));
 			if (hintarray != null && hintarray.length > 1){
 				if (hint.equals("word")){
@@ -801,7 +777,6 @@ public class MainActivity extends Activity {
 
 	   @Override
 	   protected void onDestroy() {
-		   Log.i("info", "onDestroy called");
 		  _currentIndex = 0;
 		  if(soundGenerator != null){
 			  _listenerIsReady = false;

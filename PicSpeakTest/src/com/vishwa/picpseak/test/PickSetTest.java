@@ -1,10 +1,10 @@
-package edu.upenn.cis350.mosstalkwords.test;
+package com.vishwa.picspeak.test;
 
 import java.util.ArrayList;
 
 import android.os.AsyncTask;
 import android.test.ActivityInstrumentationTestCase2;
-import edu.upenn.cis350.mosstalkwords.PickSet;
+import com.vishwa.picspeak.PickSet;
 
 public class PickSetTest extends ActivityInstrumentationTestCase2<PickSet> {
 

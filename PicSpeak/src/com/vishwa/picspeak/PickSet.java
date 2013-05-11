@@ -14,7 +14,6 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.TreeMap;
-import java.util.concurrent.ExecutionException;
 
 import org.apache.http.util.ByteArrayBuffer;
 
@@ -30,19 +29,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class PickSet extends Activity {
 	private final static String currentSetPath = "edu.upenn.cis350.mosstalkwords.currentSetPath";
@@ -52,7 +46,6 @@ public class PickSet extends Activity {
 	private String difficulty;
 	private String category;
 	private Scores scores;
-	private TextView highscore;
 	
 	private Button _reportButton;
 	
@@ -62,12 +55,10 @@ public class PickSet extends Activity {
 	private TreeMap<String, ArrayList<String>> catToWords;
 	private TreeMap<String, Integer> catToSizeOfCat = new TreeMap<String, Integer>();
 	private TreeMap<String, Integer> catToNumWordCompleted = new TreeMap<String, Integer>();
-	private AsyncTask<String, Integer, Boolean> downloadFiles;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		//downloadFiles = new LoadFilesTask().execute("");
 		setContentView(R.layout.activity_pick);
 		
 		if(!isOnline())
@@ -167,7 +158,6 @@ public class PickSet extends Activity {
 				 category = category.replaceAll("\\s","");
 				 category = category.toLowerCase();
 				 String score = getPercentageOfCategoryCompleted(category);
-				 Log.i("info", score);
 				 boolean unlocked = checkUnlocked(cat, diff);
 				 setlist.add(new Set(score, cat, diff, unlocked));
 			 }
@@ -341,12 +331,10 @@ public class PickSet extends Activity {
 		@Override
 		protected Boolean doInBackground(String... firstImagePath) {
 			boolean b = false;
-			Log.i("info", "LoadOneFile called");
+
 			try {
 					URL ur = new URL(MainActivity.bucketSite + firstImagePath[0]+firstImagePath[1] + ".jpg");
-					Log.i("info", ur.toString());
 					File file = new File(getApplicationContext().getCacheDir(),  firstImagePath[1] +".jpg");
-					Log.i("info", file.getAbsolutePath());	
 					if (file.exists() == false){
 					URLConnection ucon = ur.openConnection();
 					InputStream is = ucon.getInputStream();
@@ -361,12 +349,7 @@ public class PickSet extends Activity {
 					fos.close();
 					b = true;
 				}
-					else{
-						Log.i("info", file.getAbsolutePath() + "  exists!");
-					}
-
-
-			}catch (MalformedURLException e1) {
+			} catch (MalformedURLException e1) {
 				e1.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();

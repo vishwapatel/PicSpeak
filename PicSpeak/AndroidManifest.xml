@@ -26,7 +26,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="edu.upenn.cis350.mosstalkwords.PickSet"
+            android:name="com.vishwa.picspeak.PickSet"
             android:label="@string/app_name" 
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -35,14 +35,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="edu.upenn.cis350.mosstalkwords.MainActivity" 
+        <activity android:name="com.vishwa.picspeak.MainActivity" 
             android:screenOrientation="portrait"/>
         
-        <activity android:name="edu.upenn.cis350.mosstalkwords.HelpTextActivity" 
+        <activity android:name="com.vishwa.picspeak.HelpTextActivity" 
             android:theme="@android:style/Theme.Dialog"
             android:screenOrientation="portrait"/>
         
-        <activity android:name="edu.upenn.cis350.mosstalkwords.EndSet" 
+        <activity android:name="com.vishwa.picspeak.EndSet" 
             android:screenOrientation="portrait"/>
         
     </application>

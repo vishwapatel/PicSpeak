@@ -1,12 +1,12 @@
-package edu.upenn.cis350.mosstalkwords.test;
+package com.vishwa.picspeak.test;
 
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.Button;
-import edu.upenn.cis350.mosstalkwords.EndSet;
-import edu.upenn.cis350.mosstalkwords.R;
-import edu.upenn.cis350.mosstalkwords.Scores;
+import com.vishwa.picspeak.EndSet;
+import com.vishwa.picspeak.R;
+import com.vishwa.picspeak.Scores;
 
 public class EndSetTest extends ActivityInstrumentationTestCase2<EndSet> {
 

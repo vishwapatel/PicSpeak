@@ -1,9 +1,9 @@
-package edu.upenn.cis350.mosstalkwords.test;
+package com.vishwa.picspeak.test;
 
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.Button;
-import edu.upenn.cis350.mosstalkwords.HelpTextActivity;
-import edu.upenn.cis350.mosstalkwords.R;
+import com.vishwa.picspeak.HelpTextActivity;
+import com.vishwa.picspeak.R;
 
 public class HelpTextActivityTest extends ActivityInstrumentationTestCase2<HelpTextActivity> {
 

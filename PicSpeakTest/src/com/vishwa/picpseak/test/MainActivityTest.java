@@ -1,4 +1,4 @@
-package edu.upenn.cis350.mosstalkwords.test;
+package com.vishwa.picspeak.test;
 
 import java.util.ArrayList;
 
@@ -7,9 +7,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.Button;
-import edu.upenn.cis350.mosstalkwords.MainActivity;
-import edu.upenn.cis350.mosstalkwords.PickSet;
-import edu.upenn.cis350.mosstalkwords.R;
+import com.vishwa.picspeak.MainActivity;
+import com.vishwa.picspeak.PickSet;
+import com.vishwa.picspeak.R;
 
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
