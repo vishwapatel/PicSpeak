@@ -1,11 +1,14 @@
 # [PicSpeak](https://play.google.com/store/apps/details?id=com.vishwa.picspeak) #
 
-[PicSpeak](https://play.google.com/store/apps/details?id=com.vishwa.picspeak) is an Android app for Tablets available on Google Play (App Store) that has been primarily designed for [aphasia](http://en.wikipedia.org/wiki/Aphasia) patients and their rehabilitation therapists. <strong> However, PicSpeak can also be used by parents to teach their kids new words through association with some image of that word. </strong> PicSpeak is a modernized mobile gamified approach to an existing (and slightly outdated) aphasia therapy software called [MossTalk Words](http://www.mosstalkwords.com/). Most aphasia patients suffer from these symptoms:
+[PicSpeak](https://play.google.com/store/apps/details?id=com.vishwa.picspeak) is an Android app for Tablets available on Google Play (App Store) (https://play.google.com/store/apps/details?id=com.vishwa.picspeak) that has been primarily designed for [aphasia](http://en.wikipedia.org/wiki/Aphasia) patients and their rehabilitation therapists. <strong> However, PicSpeak can also be used by parents to teach their kids new words through association with some image of that word. </strong> PicSpeak is a modernized, mobile-gamified approach to an existing (and slightly outdated) aphasia therapy software called [MossTalk Words](http://www.mosstalkwords.com/). Most aphasia patients suffer from these symptoms:
 - inability to name objects
 - inability to form words
 - poor enunciation
 
  In order to tackle these symptoms the app presents a visual stimulus (i.e an image) and then waits for the user's voice input and it processes this input through the [Google Voice Recognition API](http://developer.android.com/reference/android/speech/package-summary.html) and awards the user's points based on whether they got it right and how many hints they used. The app provides hints which can help the patient make a conncection between the object and its name.  
+
+The images and hints are hosted in [Amazon S3](aws.amazon.com/s3/) buckets and are therefore very easily extensible. This is by design because allowing the creation of new, future content was a prime concern when designing the app. The app uses the [Google Voice Recognition API](http://developer.android.com/reference/android/speech/package-summary.html) and it also uses [Android Text-to-Speech](developer.android.com/reference/android/speech/tts/TextToSpeech.html‎
+) to read out the hints and to congratulate/encourage the user, and to read the help text because aphasia patients generally have trouble reading lengthy content. 
 
 Here's how the app works:
 
