@@ -42,5 +42,5 @@ Lastly, if you reach the end of the set, then a page tells you how you've perfor
 
 ![Help Screen](http://i.imgur.com/PXrbxqT.png) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ![End Screen](http://i.imgur.com/t3WmZ16.png)
 
-
+Contributors: Michael Posner, Fiona Strain, Jinesh Desai
 
