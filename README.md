@@ -13,6 +13,7 @@ The images and hints are hosted in [Amazon S3](aws.amazon.com/s3/) buckets and a
 Here's how the app works:
 
 When you open the app, you see a selection screen to pick the set you would like to play with. As you can see below, some levels/sets are locked. You can also see three starts next to each set. These represent your progress through that set. One star means you've completed six out of the 10 stimuli in that set, two mean you've completed 8 out of 10 and three stars mean you've aced the set! When you get at least one star in one of the sets you then unlock the more difficult version of that stimulus set. If the therapists of the aphasia patients would like to analyze the progress of their patients then the app provides a 'Send Report' button which will nicely format all the statistics about each stimulus/image that the user attempted and email them to any address of your choice.
+
 ![Selection Screen](http://i.imgur.com/6Rx8qm7.png)
 
 Now, once you pick a set you wish to play you move on to the main game screen. On the main game screen, you can see the following things:
