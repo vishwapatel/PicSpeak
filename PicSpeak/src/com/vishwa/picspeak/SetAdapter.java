@@ -14,54 +14,54 @@ import android.widget.TextView;
 
 
 	public class SetAdapter extends ArrayAdapter<Set>{
-		Context context;
-		int layoutResourceId;
-		ArrayList<Set> data = null;
+		Context mContext;
+		int mLayoutResourceId;
+		ArrayList<Set> mData = null;
 		
 		public SetAdapter(Context context, int layoutResourceId, ArrayList<Set> data){
 			super(context, layoutResourceId, data);
-			this.layoutResourceId = layoutResourceId;
-			this.context = context;
-			this.data = data;
+			this.mLayoutResourceId = layoutResourceId;
+			this.mContext = context;
+			this.mData = data;
 		}
 
 		@Override
 	    public View getView(int position, View convertView, ViewGroup parent) {
 	        View row = convertView;
-	        SetInfo inf = null;
+	        SetInfo setInfo = null;
 	       
 	        if(row == null)
 	        {
-	            LayoutInflater inflater = ((Activity)context).getLayoutInflater();
-	            row = inflater.inflate(layoutResourceId, parent, false);
+	            LayoutInflater inflater = ((Activity)mContext).getLayoutInflater();
+	            row = inflater.inflate(mLayoutResourceId, parent, false);
 	            
 	           
-	            inf = new SetInfo();
-	            inf.star1Icon = (ImageView)row.findViewById(R.id.star1Icon);
-	            inf.star2Icon = (ImageView)row.findViewById(R.id.star2Icon);
-	            inf.star3Icon = (ImageView)row.findViewById(R.id.star3Icon);
-	            inf.category = (TextView)row.findViewById(R.id.txtCategory);
-	            inf.difficulty =(TextView)row.findViewById(R.id.txtDifficulty);
-	            inf.lockedIcon = (ImageView)row.findViewById(R.id.lockedicon);
-	            row.setTag(inf);
+	            setInfo = new SetInfo();
+	            setInfo.star1Icon = (ImageView)row.findViewById(R.id.star1Icon);
+	            setInfo.star2Icon = (ImageView)row.findViewById(R.id.star2Icon);
+	            setInfo.star3Icon = (ImageView)row.findViewById(R.id.star3Icon);
+	            setInfo.category = (TextView)row.findViewById(R.id.txtCategory);
+	            setInfo.difficulty =(TextView)row.findViewById(R.id.txtDifficulty);
+	            setInfo.lockedIcon = (ImageView)row.findViewById(R.id.lockedicon);
+	            row.setTag(setInfo);
 	        }
 	        else
 	        {
-	            inf = (SetInfo)row.getTag();
+	            setInfo = (SetInfo)row.getTag();
 	        }
-	        Set currset = data.get(position);
-	        inf.category.setText(currset.category);
-	        inf.difficulty.setText(currset.difficulty);
-	        inf.star1Icon.setImageResource(currset.star1);
-	        inf.star2Icon.setImageResource(currset.star2);
-	        inf.star3Icon.setImageResource(currset.star3);
-	        if(currset.locked){
-	        inf.lockedIcon.setImageResource(R.drawable.locked);
+	        Set currentSet = mData.get(position);
+	        setInfo.category.setText(currentSet.getSetCategory());
+	        setInfo.difficulty.setText(currentSet.getSetDifficulty());
+	        setInfo.star1Icon.setImageResource(currentSet.getStar1());
+	        setInfo.star2Icon.setImageResource(currentSet.getStar2());
+	        setInfo.star3Icon.setImageResource(currentSet.getStar3());
+	        if(currentSet.isSetLocked()){
+	        setInfo.lockedIcon.setImageResource(R.drawable.locked);
 	        }
 	        else{
-	        	inf.lockedIcon.setImageResource(R.drawable.checkmark_2);
+	        	setInfo.lockedIcon.setImageResource(R.drawable.checkmark_2);
 	        }
-	        row.setBackgroundColor(currset.color);
+	        row.setBackgroundColor(currentSet.getColor());
 	        return row;
 	    }
 	   

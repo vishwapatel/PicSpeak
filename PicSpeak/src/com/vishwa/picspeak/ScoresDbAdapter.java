@@ -22,7 +22,7 @@ public class ScoresDbAdapter extends SQLiteOpenHelper {
     private static final String KEY_NAME = "name";
     private static final String KEY_SCORE = "score";
     
-    private SQLiteDatabase db;
+    private SQLiteDatabase mSqliteDb;
  
     public ScoresDbAdapter(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -30,30 +30,30 @@ public class ScoresDbAdapter extends SQLiteOpenHelper {
  
     // Creating Tables
     @Override
-    public void onCreate(SQLiteDatabase db) {
+    public void onCreate(SQLiteDatabase mSqliteDb) {
         String CREATE_SCORES_TABLE = "CREATE TABLE " + TABLE_SCORES + "("
                 + KEY_NAME + " TEXT PRIMARY KEY NOT NULL," + KEY_SCORE + " INTEGER NOT NULL)";
-        db.execSQL(CREATE_SCORES_TABLE);
+        mSqliteDb.execSQL(CREATE_SCORES_TABLE);
     }
  
     // Upgrading database
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase mSqliteDb, int oldVersion, int newVersion) {
         // Drop older table if existed
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SCORES);
+        mSqliteDb.execSQL("DROP TABLE IF EXISTS " + TABLE_SCORES);
  
         // Create tables again
-        onCreate(db);
+        onCreate(mSqliteDb);
     }
     
     public void open()
     {
-    	db = this.getWritableDatabase();
+    	mSqliteDb = this.getWritableDatabase();
     }
     
     public void close()
     {
-    	db.close();
+    	mSqliteDb.close();
     }
  
     /**
@@ -66,12 +66,12 @@ public class ScoresDbAdapter extends SQLiteOpenHelper {
     	values.put(KEY_NAME, name);
     	values.put(KEY_SCORE, score);
     	
-    	db.insert(TABLE_SCORES, null, values);
+    	mSqliteDb.insert(TABLE_SCORES, null, values);
     }
     
     public int getScore(String name)
     {
-    	Cursor cursor = db.query(TABLE_SCORES, new String[] {KEY_NAME, KEY_SCORE}, KEY_NAME + "= '" + name + "'", null, null, null, null);
+    	Cursor cursor = mSqliteDb.query(TABLE_SCORES, new String[] {KEY_NAME, KEY_SCORE}, KEY_NAME + "= '" + name + "'", null, null, null, null);
     	if (cursor != null)
     	{
     		if(cursor.moveToFirst())
@@ -90,7 +90,7 @@ public class ScoresDbAdapter extends SQLiteOpenHelper {
     	values.put(KEY_NAME, name);
     	values.put(KEY_SCORE, score);
     	
-    	db.update(TABLE_SCORES, values, KEY_NAME + "= '" + name + "'", null);
+    	mSqliteDb.update(TABLE_SCORES, values, KEY_NAME + "= '" + name + "'", null);
     }
     
 }

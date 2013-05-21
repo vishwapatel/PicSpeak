@@ -11,13 +11,13 @@ import android.widget.Toast;
 
 public class HelpTextActivity extends Activity {
 	
-	private Button _backButton;
-	private Button _textToSpeechButton;
-	private TextView _helpText;
+	private Button mBackButton;
+	private Button mTextToSpeechButton;
+	private TextView mHelpTextView;
 	
-	private TextToSpeech _soundGenerator;
+	private TextToSpeech mTextToSpeech;
 	
-	private String helpText = "How to play: Tap the button with the microphone icon on the bottom" + 
+	private String mHelpText = "How to play: Tap the button with the microphone icon on the bottom" + 
             " of the screen to start speaking. After you have spoken the word associated" +
 	          " with the picture, you will be told whether the word you spoke was correct or" +
             " incorrect. You may attempt to pronounce the word associated with the picture " +
@@ -30,38 +30,38 @@ public class HelpTextActivity extends Activity {
             "button to skip to the next picture. This will end your current streak and you" +
 	          " will not receive points for the word.";
 	
-	private boolean _listenerIsReady = false;
+	private boolean mListenerIsReady = false;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
         
-        if(_soundGenerator == null)
+        if(mTextToSpeech == null)
         {
-        	_soundGenerator = new TextToSpeech(this, new TextToSpeechListener());
+        	mTextToSpeech = new TextToSpeech(this, new TextToSpeechListener());
         }
         
-        _backButton = (Button) findViewById(R.id.backbutton);
-        _textToSpeechButton = (Button) findViewById(R.id.ttsbutton);
+        mBackButton = (Button) findViewById(R.id.backbutton);
+        mTextToSpeechButton = (Button) findViewById(R.id.ttsbutton);
         
-        _backButton.setOnClickListener(new OnClickListener() {
+        mBackButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				finish();
 			}
 		});
         
-        _textToSpeechButton.setOnClickListener(new OnClickListener() {
+        mTextToSpeechButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				if(_textToSpeechButton.getText().equals("Start Help Text-To-Speech"))
+				if(mTextToSpeechButton.getText().equals("Start Help Text-To-Speech"))
 				{
-					if(_listenerIsReady)
+					if(mListenerIsReady)
 					{
-						_soundGenerator.speak(helpText.replace('\n', ' '), TextToSpeech.QUEUE_FLUSH, null);
-						_textToSpeechButton.setText("Stop Help Reader");
-						_listenerIsReady = false;
+						mTextToSpeech.speak(mHelpText.replace('\n', ' '), TextToSpeech.QUEUE_FLUSH, null);
+						mTextToSpeechButton.setText("Stop Help Reader");
+						mListenerIsReady = false;
 					}
 					else
 					{
@@ -70,39 +70,39 @@ public class HelpTextActivity extends Activity {
 				}
 				else
 				{
-					_textToSpeechButton.setText("Start Help Text-To-Speech");
-					_soundGenerator.stop();
-					_listenerIsReady = true;
+					mTextToSpeechButton.setText("Start Help Text-To-Speech");
+					mTextToSpeech.stop();
+					mListenerIsReady = true;
 				}
 			}
 		});
         
-        _helpText = (TextView) findViewById(R.id.helptext);
+        mHelpTextView = (TextView) findViewById(R.id.helptext);
 
-        _helpText.setText(helpText);
+        mHelpTextView.setText(mHelpText);
 	}
 	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		
-		  if(_soundGenerator != null){
-			  _listenerIsReady = false;
-			  _soundGenerator.stop();
-			  _soundGenerator.shutdown(); 
-			  _soundGenerator = null;
+		  if(mTextToSpeech != null){
+			  mListenerIsReady = false;
+			  mTextToSpeech.stop();
+			  mTextToSpeech.shutdown(); 
+			  mTextToSpeech = null;
 		  }
 	}
 
 	private class TextToSpeechListener implements TextToSpeech.OnInitListener, TextToSpeech.OnUtteranceCompletedListener{
 		@Override
 		public void onInit(int arg0) {
-			_listenerIsReady = true;
+			mListenerIsReady = true;
 		}
 
 		@Override
 		public void onUtteranceCompleted(String utteranceId) {
-			_textToSpeechButton.setText("Start Help Text-To-Speech");
+			mTextToSpeechButton.setText("Start Help Text-To-Speech");
 		}
 		
 	}

@@ -11,16 +11,16 @@ import android.widget.TextView;
 
 public class EndSet extends Activity {
 
-	private String set;
-	private int setscore;
-	private boolean newStreak;
-	private boolean newNumCorrect;
+	private String mSet;
+	private int mSetScore;
+	private boolean mIsNewStreak;
+	private boolean mIsNewNumCorrectRecord;
 	
-	private TextView totalscoretext;
-	private TextView setscoretext;
-	private TextView highscoretext;
-	private ImageView highscorestamp;
-	private TextView correct;
+	private TextView mTotalScoreTextView;
+	private TextView mSetScoreTextView;
+	private TextView mHighscoreTextView;
+	private ImageView mHighscoreStamp;
+	private TextView mCorrectTextView;
 	private ImageView star1;
 	private ImageView star2;
 	private ImageView star3;
@@ -30,60 +30,60 @@ public class EndSet extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_end);
 		
-		//the name of the set
-		set = getIntent().getStringExtra("set");
+		//the name of the mSet
+		mSet = getIntent().getStringExtra("mSet");
 		TextView settext = (TextView) findViewById(R.id.endset_set);
-		settext.setText(getSetName(set));
+		settext.setText(getSetName(mSet));
 		
-		//the set score
-		setscore = getIntent().getIntExtra("setscore", 0);
-		setscoretext = (TextView) findViewById(R.id.endset_setscore);
-		setscoretext.setText(Integer.toString(setscore));
+		//the mSet score
+		mSetScore = getIntent().getIntExtra("mSetScore", 0);
+		mSetScoreTextView = (TextView) findViewById(R.id.endset_setscore);
+		mSetScoreTextView.setText(Integer.toString(mSetScore));
 		
 		Scores scores = new Scores(getApplicationContext());
 		
 		//the high score
-		highscoretext = (TextView) findViewById(R.id.endset_highscore);
-		highscoretext.setText("High Score: " + scores.getHighScore(set));
-		if(setscore == scores.getHighScore(set) && setscore > 0) {
+		mHighscoreTextView = (TextView) findViewById(R.id.endset_highscore);
+		mHighscoreTextView.setText("High Score: " + scores.getHighScore(mSet));
+		if(mSetScore == scores.getHighScore(mSet) && mSetScore > 0) {
 			//highlight the fact that they got a new high score
-			highscoretext.setTextColor(Color.parseColor("#288C8C"));
-			highscoretext.setTypeface(null, Typeface.BOLD);
+			mHighscoreTextView.setTextColor(Color.parseColor("#288C8C"));
+			mHighscoreTextView.setTypeface(null, Typeface.BOLD);
 			
 			//display the high score stamp
-			highscorestamp = (ImageView) findViewById(R.id.endset_stamp);
-			highscorestamp.setImageResource(R.drawable.high_score_stamp);
+			mHighscoreStamp = (ImageView) findViewById(R.id.endset_stamp);
+			mHighscoreStamp.setImageResource(R.drawable.high_score_stamp);
 		}
 		
-		//the total score  (set it to what it was before this set, because we will
+		//the total score  (mSet it to what it was before this mSet, because we will
 		//  animate the new points)
-		int prev_total = scores.getTotalScore() - setscore;
+		int prev_total = scores.getTotalScore() - mSetScore;
 		
-		totalscoretext = (TextView) findViewById(R.id.endset_totalscore);
-		totalscoretext.setText(Integer.toString(prev_total));
+		mTotalScoreTextView = (TextView) findViewById(R.id.endset_totalscore);
+		mTotalScoreTextView.setText(Integer.toString(prev_total));
 		
 		//the streak
-		newStreak = getIntent().getBooleanExtra("newstreak", false);
+		mIsNewStreak = getIntent().getBooleanExtra("newstreak", false);
 		TextView streaktext = (TextView) findViewById(R.id.endset_streak);
 		streaktext.setText("Longest Streak: " + scores.getHighestStreak());
 		
-		if(newStreak && scores.getHighestStreak() > 0) {
+		if(mIsNewStreak && scores.getHighestStreak() > 0) {
 			//highlight the fact that they got a new streak 
 			streaktext.setTextColor(Color.parseColor("#288C8C"));
 			streaktext.setTypeface(null, Typeface.BOLD);
 		}
 		
-		//num correct and star count
-		newNumCorrect = getIntent().getBooleanExtra("newNumCorrect",false);
+		//num mCorrectTextView and star count
+		mIsNewNumCorrectRecord = getIntent().getBooleanExtra("mIsNewNumCorrectRecord",false);
 		int numCorrect = getIntent().getIntExtra("numCorrect", 0);
 		
-		correct = (TextView) findViewById(R.id.endset_correct_count);
-		correct.setText(Integer.toString(numCorrect) + "/10 Correct");
+		mCorrectTextView = (TextView) findViewById(R.id.endset_correct_count);
+		mCorrectTextView.setText(Integer.toString(numCorrect) + "/10 Correct");
 		
-		if(newNumCorrect) {
-			//highlight the fact that they got a new number of correct pics
-			correct.setTextColor(Color.parseColor("#288C8C"));
-			correct.setTypeface(null, Typeface.BOLD);
+		if(mIsNewNumCorrectRecord) {
+			//highlight the fact that they got a new number of mCorrectTextView pics
+			mCorrectTextView.setTextColor(Color.parseColor("#288C8C"));
+			mCorrectTextView.setTypeface(null, Typeface.BOLD);
 		}
 		
 		star1 = (ImageView) findViewById(R.id.endset_star1);
@@ -104,7 +104,7 @@ public class EndSet extends Activity {
 		
 		
 		//call the asynctask to increment the previous total to the new total
-		new IncScore().execute(prev_total, scores.getTotalScore(), setscore);
+		new IncScore().execute(prev_total, scores.getTotalScore(), mSetScore);
 		
 	}
 	
@@ -118,24 +118,24 @@ public class EndSet extends Activity {
 	}
 	
 	
-	public String getSetName(String set) {
+	public String getSetName(String mSet) {
 		
-		if(set.equals("livingthingseasy")) {
+		if(mSet.equals("livingthingseasy")) {
 			return "Living Things Easy";
 		}
-		else if(set.equals("livingthingsmedium")) {
+		else if(mSet.equals("livingthingsmedium")) {
 			return "Living Things Medium";
 		}
-		else if(set.equals("livingthingshard")) {
+		else if(mSet.equals("livingthingshard")) {
 			return "Living Things Hard";
 		}
-		else if(set.equals("nonlivingthingseasy")) {
+		else if(mSet.equals("nonlivingthingseasy")) {
 			return "Non Living Things Easy";
 		}
-		else if(set.equals("nonlivingthingsmedium")) {
+		else if(mSet.equals("nonlivingthingsmedium")) {
 			return "Non Living Things Medium";
 		}
-		else if(set.equals("nonlivingthingshard")) {
+		else if(mSet.equals("nonlivingthingshard")) {
 			return "Non Living Things Hard";
 		}
 		else{
@@ -175,12 +175,12 @@ public class EndSet extends Activity {
 		
 		
 		protected void onProgressUpdate(Integer... current) {
-			totalscoretext.setText(current[0].toString());
-			setscoretext.setText(current[1].toString());
+			mTotalScoreTextView.setText(current[0].toString());
+			mSetScoreTextView.setText(current[1].toString());
 		}
 		
 		protected void onPostExecute(Void voids) {
-			setscoretext.setVisibility(View.INVISIBLE);
+			mSetScoreTextView.setVisibility(View.INVISIBLE);
 		}
 
 	}

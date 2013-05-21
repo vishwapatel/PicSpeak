@@ -4,17 +4,17 @@ import android.content.Context;
 
 public class Scores{
 
-	private int total_score;
-	private int highest_streak;
+	private int mTotalScore;
+	private int mHighestStreak;
 
-	public ScoresDbAdapter scoresDb;
+	public ScoresDbAdapter mScoresDb;
 	/**
 	 * Initialize a new Scores object for keeping track of a user's scores.
 	 */
 	public Scores(Context ctx) {
-		total_score = 0;
-		scoresDb = new ScoresDbAdapter(ctx);
-		scoresDb.open();
+		mTotalScore = 0;
+		mScoresDb = new ScoresDbAdapter(ctx);
+		mScoresDb.open();
 	}
 
 
@@ -24,15 +24,15 @@ public class Scores{
 	 * @return the total score
 	 */
 	public int getTotalScore() {
-		int totalScore = scoresDb.getScore("totalscore");
+		int totalScore = mScoresDb.getScore("totalscore");
 		if(totalScore != -1)
 		{
-			total_score = totalScore;
-			return total_score;
+			mTotalScore = totalScore;
+			return mTotalScore;
 		}
 		else
 		{
-			scoresDb.addScore("totalscore", total_score);
+			mScoresDb.addScore("totalscore", mTotalScore);
 			return 0;
 		}
 	}
@@ -45,17 +45,17 @@ public class Scores{
 	 */
 	public boolean setTotalScore(int val) {
 		if(val > 0) {
-			total_score = val;
+			mTotalScore = val;
 			
-			int result = scoresDb.getScore("totalscore");
+			int result = mScoresDb.getScore("totalscore");
 			if(result != -1)
 			{
-				scoresDb.updateScore("totalscore", total_score);
+				mScoresDb.updateScore("totalscore", mTotalScore);
 				return true;
 			}
 			else
 			{
-				scoresDb.addScore("totalscore", total_score);
+				mScoresDb.addScore("totalscore", mTotalScore);
 				return true;
 			}
 		}
@@ -73,8 +73,8 @@ public class Scores{
 	 */
 	public boolean incTotalScore(int val) {
 		if(val > 0) {
-			total_score += val;
-			setTotalScore(total_score);
+			mTotalScore += val;
+			setTotalScore(mTotalScore);
 			return true;
 		}
 		else {
@@ -90,14 +90,14 @@ public class Scores{
 	 */
 	public int getHighScore(String set) {
 		
-		int setHighScore = scoresDb.getScore(set+"score");
+		int setHighScore = mScoresDb.getScore(set+"score");
 		if(setHighScore != -1)
 		{
 			return setHighScore;
 		}
 		else
 		{
-			scoresDb.addScore(set+"score", 0);
+			mScoresDb.addScore(set+"score", 0);
 			return 0;
 		}
 	}
@@ -112,14 +112,14 @@ public class Scores{
 	 */
 	public boolean setHighScore(String set, int val) {
 
-		int setHighScore = scoresDb.getScore(set+"score");
+		int setHighScore = mScoresDb.getScore(set+"score");
 		if(setHighScore != -1)
 		{
-			scoresDb.updateScore(set+"score", val);
+			mScoresDb.updateScore(set+"score", val);
 		}
 		else
 		{
-			scoresDb.addScore(set+"score", val);
+			mScoresDb.addScore(set+"score", val);
 		}
 		
 		return true;
@@ -127,28 +127,28 @@ public class Scores{
 
 	public void setNumCompleted(String set, int val) {
 		
-		int currentNumCompleted = scoresDb.getScore(set+"completed");
+		int currentNumCompleted = mScoresDb.getScore(set+"completed");
 		if(currentNumCompleted != -1)
 		{
-			scoresDb.updateScore(set+"completed", val);
+			mScoresDb.updateScore(set+"completed", val);
 		}
 		else
 		{
-			scoresDb.addScore(set+"completed", val);
+			mScoresDb.addScore(set+"completed", val);
 		}
 		
 	}
 	
 	public int getNumCompleted(String set) {
 		
-		int currentNumCompleted = scoresDb.getScore(set+"completed");
+		int currentNumCompleted = mScoresDb.getScore(set+"completed");
 		if(currentNumCompleted != -1)
 		{
 			return currentNumCompleted;
 		}
 		else
 		{
-			scoresDb.addScore(set+"completed", 0);
+			mScoresDb.addScore(set+"completed", 0);
 			return 0;
 		}
 	}
@@ -161,15 +161,15 @@ public class Scores{
 	 */
 	public int getHighestStreak() {
 		
-		int streak = scoresDb.getScore("higheststreak");
+		int streak = mScoresDb.getScore("higheststreak");
 		if(streak != -1)
 		{
-			highest_streak = streak;
-			return highest_streak;
+			mHighestStreak = streak;
+			return mHighestStreak;
 		}
 		else
 		{
-			scoresDb.addScore("higheststreak", 0);
+			mScoresDb.addScore("higheststreak", 0);
 			return 0;
 		}
 		
@@ -184,16 +184,16 @@ public class Scores{
 	public boolean setHighestStreak(int val) {
 		
 		if(val > 0) {
-			highest_streak = val;
-			int score = scoresDb.getScore("higheststreak");
+			mHighestStreak = val;
+			int score = mScoresDb.getScore("higheststreak");
 			if(score != -1)
 			{
-				scoresDb.updateScore("higheststreak", highest_streak);
+				mScoresDb.updateScore("higheststreak", mHighestStreak);
 				return true;
 			}
 			else
 			{
-				scoresDb.addScore("higheststreak", highest_streak);
+				mScoresDb.addScore("higheststreak", mHighestStreak);
 				return true;
 			}
 		}
@@ -203,7 +203,7 @@ public class Scores{
 	}
 	
 	public void closeDb() {
-		scoresDb.close();
+		mScoresDb.close();
 	}
 
 

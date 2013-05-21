@@ -39,22 +39,22 @@ import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
 
 public class PickSet extends Activity {
-	private final static String currentSetPath = "edu.upenn.cis350.mosstalkwords.currentSetPath";
-	private final static String currentSet = "edu.upenn.cis350.mosstalkwords.currentSet";
-	private ArrayList<String> categories;
-	private ListView lv;
-	private String difficulty;
-	private String category;
-	private Scores scores;
+	private String mCurrentSetPath = "mCurrentSetPath";
+	private String mCurrentSet = "mCurrentSet";
+	private ArrayList<String> mCategoriesList;
+	private ListView mCategoriesListView;
+	private String mDifficulty;
+	private String mCategory;
+	private Scores mUserScores;
 	
-	private Button _reportButton;
+	private Button mReportButton;
 	
-	private StatsDbAdapter _statsDb;
+	private StatsDbAdapter mStatsDb;
 	
-	private AsyncTask<String, Integer, Boolean> downloadCatsWords;
-	private TreeMap<String, ArrayList<String>> catToWords;
-	private TreeMap<String, Integer> catToSizeOfCat = new TreeMap<String, Integer>();
-	private TreeMap<String, Integer> catToNumWordCompleted = new TreeMap<String, Integer>();
+	private AsyncTask<String, Integer, Boolean> mLoadCategories;
+	private TreeMap<String, ArrayList<String>> mCategoryWords;
+	private TreeMap<String, Integer> mCategorySizes = new TreeMap<String, Integer>();
+	private TreeMap<String, Integer> mNumCategoryWordsFinished = new TreeMap<String, Integer>();
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState){
@@ -67,23 +67,23 @@ public class PickSet extends Activity {
 		}
 		else
 		{
-			scores = new Scores(getApplicationContext());
-			//initialize category and difficulty
-			category = "livingthings";
-			difficulty = "easy";
+			mUserScores = new Scores(getApplicationContext());
+			//initialize mCategory and mDifficulty
+			mCategory = "livingthings";
+			mDifficulty = "easy";
 			
-			downloadCatsWords = new LoadCategoriesWords().execute("");
+			mLoadCategories = new LoadCategoriesAsyncTask().execute("");
 			
-			_statsDb = new StatsDbAdapter(this.getApplicationContext());
-			_statsDb.open();
+			mStatsDb = new StatsDbAdapter(this.getApplicationContext());
+			mStatsDb.open();
 			
-			_reportButton = (Button) findViewById(R.id.reportButton);
+			mReportButton = (Button) findViewById(R.id.reportButton);
 			
-	        _reportButton.setOnClickListener(new OnClickListener() {
+	        mReportButton.setOnClickListener(new OnClickListener() {
 	
 				@Override
 				public void onClick(View arg0) {
-					String email_body = _statsDb.getStats();
+					String email_body = mStatsDb.getStats();
 					
 					Intent email = new Intent(Intent.ACTION_SEND);		  
 					email.putExtra(Intent.EXTRA_SUBJECT, "PicSpeak Report");
@@ -125,23 +125,23 @@ public class PickSet extends Activity {
 	@Override 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {     
 	  super.onActivityResult(requestCode, resultCode, data); 
-	  updateListViewInfo();
+	  updateListView();
 	}
 	
 	 private boolean checkUnlocked(String cat, String diff){
-		 String category = cat.replaceAll("\\s","");
-		 category = category.toLowerCase();
+		 String mCategory = cat.replaceAll("\\s","");
+		 mCategory = mCategory.toLowerCase();
 		 if (diff.equals("Easy")){
 			return true; 
 		 }
 		 if(diff.equals("Medium")){
-			 int prevLevelScore = scores.getNumCompleted(category+"easy");
+			 int prevLevelScore = mUserScores.getNumCompleted(mCategory+"easy");
 			 if(prevLevelScore >= 6){
 				 return true;
 			 }
 		 }
 		 if(diff.equals("Hard")){
-			 int prevLevelScore = scores.getNumCompleted(category+"medium");
+			 int prevLevelScore = mUserScores.getNumCompleted(mCategory+"medium");
 			 if(prevLevelScore >= 6){
 				 return true;
 			 }
@@ -154,10 +154,10 @@ public class PickSet extends Activity {
 		 ArrayList<Set> setlist = new ArrayList<Set>();
 		 for (String cat : cats){
 			 for (String diff : diffs){
-				 String category = cat+diff;
-				 category = category.replaceAll("\\s","");
-				 category = category.toLowerCase();
-				 String score = getPercentageOfCategoryCompleted(category);
+				 String mCategory = cat+diff;
+				 mCategory = mCategory.replaceAll("\\s","");
+				 mCategory = mCategory.toLowerCase();
+				 String score = getPercentageOfCategoryCompleted(mCategory);
 				 boolean unlocked = checkUnlocked(cat, diff);
 				 setlist.add(new Set(score, cat, diff, unlocked));
 			 }
@@ -167,18 +167,18 @@ public class PickSet extends Activity {
 	 public void setListViewInfo(){
 		ArrayList<Set> sets = getSetList();
 		SetAdapter adapter= new SetAdapter(this,R.layout.listview_item, sets); 
-		lv = (ListView)findViewById(R.id.listView1);
+		mCategoriesListView = (ListView)findViewById(R.id.listView1);
 		View header = (View)getLayoutInflater().inflate(R.layout.listview_header, null);
-		lv.addHeaderView(header);
-		lv.setAdapter(adapter);
-		lv.setOnItemClickListener(new SetSelectedListener());      
+		mCategoriesListView.addHeaderView(header);
+		mCategoriesListView.setAdapter(adapter);
+		mCategoriesListView.setOnItemClickListener(new SetSelectedListener());      
 	}
 	 
-	 public void updateListViewInfo(){
+	 public void updateListView(){
 		 ArrayList<Set> newSetList = getSetList();
-		 lv = (ListView)findViewById(R.id.listView1);
-		 HeaderViewListAdapter hlva = (HeaderViewListAdapter) lv.getAdapter();
-		 ArrayAdapter<Set> adap = (ArrayAdapter<Set>) hlva.getWrappedAdapter();
+		 mCategoriesListView = (ListView)findViewById(R.id.listView1);
+		 HeaderViewListAdapter headerViewListAdapter = (HeaderViewListAdapter) mCategoriesListView.getAdapter();
+		 ArrayAdapter<Set> adap = (ArrayAdapter<Set>) headerViewListAdapter.getWrappedAdapter();
 		 if(adap != null){
 			 adap.clear();
 			 for(Set set : newSetList){
@@ -188,24 +188,24 @@ public class PickSet extends Activity {
 	 }
 	    
 	
-	public String getPercentageOfCategoryCompleted(String category)
+	public String getPercentageOfCategoryCompleted(String mCategory)
 	{
-		int numCompleted = scores.getNumCompleted(category);
-		catToNumWordCompleted.put(category, numCompleted);
-		return catToNumWordCompleted.get(category) + "/" + 10;
+		int numCompleted = mUserScores.getNumCompleted(mCategory);
+		mNumCategoryWordsFinished.put(mCategory, numCompleted);
+		return mNumCategoryWordsFinished.get(mCategory) + "/" + 10;
 	}
 
 	public void start(View view){
 		Intent i = new Intent(this, MainActivity.class);
-		i.putExtra(currentSetPath, category+difficulty);
-		ArrayList<String> newSet = getSet(category+difficulty);
-		i.putStringArrayListExtra(currentSet, newSet);
-		AsyncTask<String, Integer, Boolean> downloadFirstFile = new LoadOneFile().execute(category+difficulty+"/",newSet.get(0));
+		i.putExtra(mCurrentSetPath, mCategory+mDifficulty);
+		ArrayList<String> newSet = getSet(mCategory+mDifficulty);
+		i.putStringArrayListExtra(mCurrentSet, newSet);
+		AsyncTask<String, Integer, Boolean> downloadFirstFile = new LoadOneFile().execute(mCategory+mDifficulty+"/",newSet.get(0));
 		startActivityForResult(i,1);
 	}
 
 	public ArrayList<String> getSet(String key){
-		ArrayList<String> fullSet = catToWords.get(key);
+		ArrayList<String> fullSet = mCategoryWords.get(key);
 		Collections.shuffle(fullSet);
 		if (fullSet.size() > 10){
 			ArrayList<String> newSet = new ArrayList<String>();
@@ -224,15 +224,15 @@ public class PickSet extends Activity {
 		@SuppressLint("DefaultLocale")
 		public void onItemClick(AdapterView<?> parent, View view, int pos,long id) {
 			Set chosen = (Set)parent.getItemAtPosition(pos);
-			if(chosen.locked){
+			if(chosen.isSetLocked()){
 				popLockedAlert();
 			}
 			else{
-			category = chosen.category;
-			category = category.replaceAll("\\s","");
-			category = category.toLowerCase();
-			difficulty = chosen.difficulty;
-			difficulty = difficulty.toLowerCase();
+			mCategory = chosen.getSetCategory();
+			mCategory = mCategory.replaceAll("\\s","");
+			mCategory = mCategory.toLowerCase();
+			mDifficulty = chosen.getSetDifficulty();
+			mDifficulty = mDifficulty.toLowerCase();
 			start(view);
 			}
 			
@@ -254,24 +254,24 @@ public class PickSet extends Activity {
 	
 	
 	
-	private class LoadCategoriesWords extends AsyncTask<String, Integer, Boolean>{
+	private class LoadCategoriesAsyncTask extends AsyncTask<String, Integer, Boolean>{
 		@Override
 		protected Boolean doInBackground(String... set) {
-			categories = new ArrayList<String>();
-			catToWords = new TreeMap<String, ArrayList<String>>();
+			mCategoriesList = new ArrayList<String>();
+			mCategoryWords = new TreeMap<String, ArrayList<String>>();
 			boolean b = false;
 			try {
-					URL ur = new URL(MainActivity.bucketSite + "categories.txt");
+					URL ur = new URL(MainActivity.S3_BUCKET_URL + "mCategoriesList.txt");
 					BufferedReader categoryReader = new BufferedReader(new InputStreamReader(ur.openStream()));
 					String lineRead;
 					while ((lineRead = categoryReader.readLine()) != null){
 						b = true;
-						categories.add(lineRead);
+						mCategoriesList.add(lineRead);
 					}
 					categoryReader.close();
-					for (String cat: categories){
+					for (String cat: mCategoriesList){
 						try{
-						URL urwords = new URL(MainActivity.bucketSite + cat + "/words.txt");
+						URL urwords = new URL(MainActivity.S3_BUCKET_URL + cat + "/words.txt");
 						BufferedReader wordsReader = new BufferedReader(new InputStreamReader(urwords.openStream()));
 						String word;
 						ArrayList<String> wordslist = new ArrayList<String>();
@@ -281,11 +281,11 @@ public class PickSet extends Activity {
 							count++;
 						}
 
-						catToWords.put(cat, wordslist);
-						catToSizeOfCat.put(cat, count);
+						mCategoryWords.put(cat, wordslist);
+						mCategorySizes.put(cat, count);
 						
-						int numCompleted = scores.getNumCompleted(cat);
-						catToNumWordCompleted.put(cat, numCompleted);
+						int numCompleted = mUserScores.getNumCompleted(cat);
+						mNumCategoryWordsFinished.put(cat, numCompleted);
 						
 						wordsReader.close();
 						}
@@ -333,7 +333,7 @@ public class PickSet extends Activity {
 			boolean b = false;
 
 			try {
-					URL ur = new URL(MainActivity.bucketSite + firstImagePath[0]+firstImagePath[1] + ".jpg");
+					URL ur = new URL(MainActivity.S3_BUCKET_URL + firstImagePath[0]+firstImagePath[1] + ".jpg");
 					File file = new File(getApplicationContext().getCacheDir(),  firstImagePath[1] +".jpg");
 					if (file.exists() == false){
 					URLConnection ucon = ur.openConnection();
@@ -361,19 +361,19 @@ public class PickSet extends Activity {
 	}
 	
 	
-	public AsyncTask.Status getDownloadCatsStatus() {
-		return downloadCatsWords.getStatus();
+	public AsyncTask.Status getLoadCategoriesStatus() {
+		return mLoadCategories.getStatus();
 	}
 	
 	@Override 
 	public void onRestart() {     
 	  super.onRestart(); 
-	  updateListViewInfo();
+	  updateListView();
 	}
 	
 	@Override
 	protected void onDestroy() {
-		_statsDb.close();
+		mStatsDb.close();
 		super.onDestroy();
 	}
 	

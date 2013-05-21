@@ -52,87 +52,86 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
     /** Called when the activity is first created. */
-	public final static String currentSavedScore = "edu.upenn.cis350.mosstalkwords.currentSavedScore";
-	public final static String bucketSite ="https://s3.amazonaws.com/mosswords/"; 
-	private ImageView _imgView;
-	private String _currentPath;
-	private int _currentIndex;
-	private Button _hintPhraseButton;
-	private Button _hintRhymeButton;
-	private Button _hintPronounceButton;
-	private Button _micButton;
-	private Button _helpButton;
-	private Button _skipButton;
-	private MediaPlayer _mediaPlayer;
-	private Bitmap currBitmap = null;
-    private TextView st;
+	public final static String S3_BUCKET_URL ="https://s3.amazonaws.com/mosswords/"; 
+	private ImageView mImageView;
+	private String mCurrentPath;
+	private int mCurrentIndex;
+	private Button mHintPhraseButton;
+	private Button mHintRhymeButton;
+	private Button mHintPronounceButton;
+	private Button mMicButton;
+	private Button mHelpButton;
+	private Button mSkipButton;
+	private MediaPlayer mMediaPlayer;
+	private Bitmap mPhotoBitmap = null;
+    private TextView mScoreTextView;
 
-	private ProgressBar progressBarSet;
+	private ProgressBar mProgressBar;
 
-	private StatsDbAdapter statsDb;
+	private StatsDbAdapter mStatsDb;
 	
-	private boolean _listenerIsReady = false;
-	private TextToSpeech soundGenerator;
-	private TreeMap<String, String[]> hints; 
-	private int _rhymeUsed; 
-	private int _totalScore = 0;
+	private boolean mListenerIsReady = false;
+	private TextToSpeech mTextToSpeech;
+	private TreeMap<String, String[]> mWordHints; 
+	private int mRhymeUsed; 
+	private int mTotalScore = 0;
 	
-	private int hintWordUsed = 0;
-	private int hintPhraseUsed = 0;
-	private int hintRhymeUsed = 0;
-	private String userGuess = new String();
+	private int mHintWordUsed = 0;
+	private int mHintPhraseUsed = 0;
+	private int mHintRhymeUsed = 0;
+	private String mUserGuess = new String();
 
-	private Scores _scores;
-	private int _setScore = 0;
-	private int _streak = 0;
-	private boolean newStreak = false;
-	private int _numHintsUsed = 0;
-	private int _numTries = 0;
-	private String _feedbackResult = "";
-	private ArrayList<String> _currentSet;
+	private Scores mUserScores;
+	private int mSetScore = 0;
+	private int mStreak = 0;
+	private boolean mNewStreak = false;
+	private int mNumHintsUsed = 0;
+	private int mNumTries = 0;
+	private String mFeedbackResult = "";
+	private ArrayList<String> mCurrentSet;
 
-	private AlertDialog ad;
-	private TextView dialogsetscoretext;
-	private int _numCorrect = 0;
+	private AlertDialog mAlertDialog;
+	private TextView mDialogScoreTextView;
+	private int mNumCorrect = 0;
 
-	private AsyncTask<String, Integer, Void> downloadHints;
-	private AsyncTask<String, Integer, Void> downloadFiles;
+	private AsyncTask<String, Integer, Void> mDownloadHintsTask;
+	private AsyncTask<String, Integer, Void> mDownloadFilesTask;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        _imgView = (ImageView) findViewById(R.id.image);
+        mImageView = (ImageView) findViewById(R.id.image);
         //for finding image files
-        _currentIndex = 0;
-        _currentPath = getIntent().getStringExtra("edu.upenn.cis350.mosstalkwords.currentSetPath");
-        _currentSet = getIntent().getStringArrayListExtra("edu.upenn.cis350.mosstalkwords.currentSet");
+        mCurrentIndex = 0;
+        mCurrentPath = getIntent().getStringExtra("currentSetPath");
+        mCurrentSet = getIntent().getStringArrayListExtra("currentSet");
         
         //scores
-        _scores = new Scores(this.getApplicationContext());
-        _totalScore = _scores.getTotalScore();
-        _setScore = 0;
-        _streak = 0;
+        mUserScores = new Scores(this.getApplicationContext());
+        mTotalScore = mUserScores.getTotalScore();
+        mSetScore = 0;
+        mStreak = 0;
         
-        statsDb = new StatsDbAdapter(this.getApplicationContext());
-        statsDb.open();
+        mStatsDb = new StatsDbAdapter(this.getApplicationContext());
+        mStatsDb.open();
         
         //set score view
-        st = (TextView) findViewById(R.id.score);
-    	st.setText(Integer.toString(_setScore));
+        mScoreTextView = (TextView) findViewById(R.id.score);
+    	mScoreTextView.setText(Integer.toString(mSetScore));
     	
-    	progressBarSet = (ProgressBar)findViewById(R.id.progressBarGame);
+    	mProgressBar = (ProgressBar)findViewById(R.id.progressBarGame);
     	Resources res = getResources();
-    	progressBarSet.setProgressDrawable(res.getDrawable( R.drawable.game_progress));
-    	progressBarSet.setMax(100);
-    	progressBarSet.setProgress(0);
-    	//download images, download hints
-    	downloadHints = new LoadHintsTask().execute("");
-        downloadFiles = new LoadFilesTask().execute("");
+    	mProgressBar.setProgressDrawable(res.getDrawable( R.drawable.game_progress));
+    	mProgressBar.setMax(100);
+    	mProgressBar.setProgress(0);
+    	//download images, download mWordHints
+    	mDownloadHintsTask = new LoadHintsAsyncTask().execute("");
+        mDownloadFilesTask = new LoadFilesAsyncTask().execute("");
         
         //create TextToSpeech
-        if(soundGenerator == null){
-        soundGenerator = new TextToSpeech(this, new TextToSpeechListener());
+        if(mTextToSpeech == null){
+        mTextToSpeech = new TextToSpeech(this, new TextToSpeechListener());
         
         }
     	try {
@@ -151,54 +150,54 @@ public class MainActivity extends Activity {
 		}
        
     	//Buttons
-        _hintPhraseButton = (Button) findViewById(R.id.hintbuttona);
-        _hintRhymeButton = (Button) findViewById(R.id.hintbuttonb);
-        _hintPronounceButton = (Button) findViewById(R.id.hintbuttonc);
-        _micButton = (Button) findViewById(R.id.micbutton);
-        _skipButton = (Button) findViewById(R.id.skipbutton);
-        _helpButton = (Button) findViewById(R.id.helpbutton);
+        mHintPhraseButton = (Button) findViewById(R.id.hintbuttona);
+        mHintRhymeButton = (Button) findViewById(R.id.hintbuttonb);
+        mHintPronounceButton = (Button) findViewById(R.id.hintbuttonc);
+        mMicButton = (Button) findViewById(R.id.micbutton);
+        mSkipButton = (Button) findViewById(R.id.skipbutton);
+        mHelpButton = (Button) findViewById(R.id.helpbutton);
       
-        _mediaPlayer = new MediaPlayer();
-        _mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mMediaPlayer = new MediaPlayer();
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         
-        _hintPhraseButton.setOnClickListener(new OnClickListener() {
+        mHintPhraseButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				
-				hintPhraseUsed = 1;
+				mHintPhraseUsed = 1;
 				playSoundText("phrase");
-				if(_numHintsUsed < 3)
-					_numHintsUsed++;	
+				if(mNumHintsUsed < 3)
+					mNumHintsUsed++;	
 			}
 		});
         
-        _hintRhymeButton.setOnClickListener(new OnClickListener() {
+        mHintRhymeButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				
-				hintRhymeUsed = 1;
+				mHintRhymeUsed = 1;
 				playSoundText("rhyme");
-				if(_numHintsUsed < 3)
-					_numHintsUsed++;
+				if(mNumHintsUsed < 3)
+					mNumHintsUsed++;
 			}
 		});
         
-        _hintPronounceButton.setOnClickListener(new OnClickListener() {
+        mHintPronounceButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				
-				hintWordUsed = 1;
+				mHintWordUsed = 1;
 				playSoundText("word");
-				if(_numHintsUsed < 3)
-					_numHintsUsed++;
+				if(mNumHintsUsed < 3)
+					mNumHintsUsed++;
 			}
 		});
         
-        _helpButton.setOnClickListener(new OnClickListener() {
+        mHelpButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent i = new Intent(getApplicationContext(), HelpTextActivity.class);
 				startActivity(i);
 			}
 		});
         
-        _micButton.setOnClickListener(new OnClickListener() {
+        mMicButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 
@@ -215,14 +214,14 @@ public class MainActivity extends Activity {
 			}
 		});
         
-        _skipButton.setOnClickListener(new OnClickListener() {
+        mSkipButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				if(_scores.getHighestStreak() < _streak) {
-					_scores.setHighestStreak(_streak);
-					newStreak = true;
+				if(mUserScores.getHighestStreak() < mStreak) {
+					mUserScores.setHighestStreak(mStreak);
+					mNewStreak = true;
 				}
 
-				_streak = 0;
+				mStreak = 0;
 				nextImage();
 			}
 		});
@@ -233,11 +232,11 @@ public class MainActivity extends Activity {
 		if(getApplicationContext() != null){
 			if(getApplicationContext().getCacheDir() != null){
 				if(getApplicationContext().getCacheDir().getPath() != null){
-					if(_currentSet == null){
+					if(mCurrentSet == null){
 						return "curr set null!";
 					}
 					else {
-						return getApplicationContext().getCacheDir().getPath()+"/"+_currentSet.get(_currentIndex)+extension; 
+						return getApplicationContext().getCacheDir().getPath()+"/"+mCurrentSet.get(mCurrentIndex)+extension; 
 					}
 				}
 			}	
@@ -248,15 +247,15 @@ public class MainActivity extends Activity {
 	/**
 	 *Async Task to load the images from the bucket and save them to the cache directory
 	 */
-	private class LoadFilesTask extends AsyncTask<String, Integer, Void>{
+	private class LoadFilesAsyncTask extends AsyncTask<String, Integer, Void>{
 		@Override
 		protected Void doInBackground(String... set) {
 			try {
 				//make sure currentSet has been defined already
-				if(_currentSet != null){
-					for (String word: _currentSet){
+				if(mCurrentSet != null){
+					for (String word: mCurrentSet){
 						//set url for each image
-						URL url = new URL(bucketSite + _currentPath + 
+						URL url = new URL(S3_BUCKET_URL + mCurrentPath + 
 								"/" + word + ".jpg");
 						//create file to be saved in cache directory with word.jpg file naming
 						File file = new File(getApplicationContext().getCacheDir(),word+".jpg");
@@ -284,7 +283,7 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	private class MissingImageTask extends AsyncTask<URL,Void, Bitmap>{
+	private class LoadMissingImageAsyncTask extends AsyncTask<URL,Void, Bitmap>{
 		ProgressDialog dialog;
 		@Override
 	    protected void onPreExecute() {
@@ -321,24 +320,24 @@ public class MainActivity extends Activity {
 		@Override
 		protected void onPostExecute(Bitmap result){
 			dialog.dismiss();
-			_imgView.setImageBitmap(result);
+			mImageView.setImageBitmap(result);
 		}	
 	}
 	
 
 	/**
-	 * Async task to load hints from the bucket for the current set and store them in a map
+	 * Async task to load mWordHints from the bucket for the current set and store them in a map
 	 */
-	private class LoadHintsTask extends AsyncTask<String, Integer, Void>{
+	private class LoadHintsAsyncTask extends AsyncTask<String, Integer, Void>{
 
 		@Override
 		protected Void doInBackground(String... set) {
-			//Use a map of each word to an array of it's hints
-			hints = new TreeMap<String, String[]>();
+			//Use a map of each word to an array of it's mWordHints
+			mWordHints = new TreeMap<String, String[]>();
 			try {
-				URL ur = new URL(bucketSite + _currentPath + 
-				"/" + "hints.txt");
-				//make a reader from the hints file in the bucket
+				URL ur = new URL(S3_BUCKET_URL + mCurrentPath + 
+				"/" + "mWordHints.txt");
+				//make a reader from the mWordHints file in the bucket
 				BufferedReader hintReader = new BufferedReader(new InputStreamReader(ur.openStream()));
 				String lineRead;
 				int linenumber = 0;
@@ -357,12 +356,12 @@ public class MainActivity extends Activity {
 						Rhyme2 = lineRead; 
 						if(!word.equals("") && !sentence.equals("") && !Rhyme1.equals("") && !Rhyme2.equals("")){
 							String [] hts = {sentence, Rhyme1, Rhyme2};
-							hints.put(word, hts);
+							mWordHints.put(word, hts);
 						}
 						break;
 					}
 					linenumber++;
-					//if we've reached an empty line, means we're moving on to next word's hints, reset linenumber
+					//if we've reached an empty line, means we're moving on to next word's mWordHints, reset linenumber
 					if(lineRead.length() == 0){
 						linenumber = 0;
 					}
@@ -385,11 +384,11 @@ public class MainActivity extends Activity {
 	 * Loads the image needed from the cache directory and sets it to the image view
 	 */
 	private void loadImage() throws ClientProtocolException, IOException, InterruptedException, ExecutionException {	
-		currBitmap = null;
+		mPhotoBitmap = null;
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		if(!(new File(buildCachePath(".jpg"))).exists()){
-			AsyncTask<URL, Void, Bitmap> loadImage = new MissingImageTask().execute(new URL(bucketSite + _currentPath + 
-					"/" + _currentSet.get(_currentIndex) + ".jpg"));
+			AsyncTask<URL, Void, Bitmap> loadImage = new LoadMissingImageAsyncTask().execute(new URL(S3_BUCKET_URL + mCurrentPath + 
+					"/" + mCurrentSet.get(mCurrentIndex) + ".jpg"));
 			}
 		try{
 			//First just determine the size of the bitmap file
@@ -405,18 +404,18 @@ public class MainActivity extends Activity {
 			 //Now with the correct sample size, actually load the bitmap
 			 options.inJustDecodeBounds = false;
 			 options.inSampleSize = divider;
-			 currBitmap = BitmapFactory.decodeFile(buildCachePath(".jpg"),options);
+			 mPhotoBitmap = BitmapFactory.decodeFile(buildCachePath(".jpg"),options);
 		}
 		catch(Exception e){
 		}	
-		if (currBitmap != null){
+		if (mPhotoBitmap != null){
 			//If it's the first image of the set, just display it
-			if(_currentIndex == 0){
-				_imgView.setImageBitmap(currBitmap);
+			if(mCurrentIndex == 0){
+				mImageView.setImageBitmap(mPhotoBitmap);
 			}
 			//If not, use animation to change the image
 			else{
-				imageViewAnimatedChange(getApplicationContext(), _imgView, currBitmap);
+				imageViewAnimatedChange(getApplicationContext(), mImageView, mPhotoBitmap);
 			}
 		}	
 	}
@@ -458,48 +457,48 @@ public class MainActivity extends Activity {
 
 
 	private void playSoundText(String hint){
-		if (_listenerIsReady == false){
+		if (mListenerIsReady == false){
 			Toast.makeText(this, "Hold on! I'm not ready yet! Try again in a second!", Toast.LENGTH_SHORT).show();
 		}
 		else {
 			String text = "";
-			String[] hintarray = hints.get(_currentSet.get(_currentIndex));
+			String[] hintarray = mWordHints.get(mCurrentSet.get(mCurrentIndex));
 			if (hintarray != null && hintarray.length > 1){
 				if (hint.equals("word")){
-					text = _currentSet.get(_currentIndex);
+					text = mCurrentSet.get(mCurrentIndex);
 				}
 				if (hint.equals("phrase")){
 					text = hintarray[0];
 				}
 				if (hint.equals("rhyme")){
-					text = hintarray[_rhymeUsed+1];
-					if(_rhymeUsed == (hintarray.length-2)){
-						_rhymeUsed = 0;
+					text = hintarray[mRhymeUsed+1];
+					if(mRhymeUsed == (hintarray.length-2)){
+						mRhymeUsed = 0;
 					}
 					else{
-						_rhymeUsed++;
+						mRhymeUsed++;
 					}
 				}
 			}
-			soundGenerator.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+			mTextToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
 		}
 	}
 
 	private class TextToSpeechListener implements TextToSpeech.OnInitListener{
 		@Override
 		public void onInit(int arg0) {
-			_listenerIsReady = true;
+			mListenerIsReady = true;
 		}
 	}
 
     public void nextImage(){
-    	soundGenerator.stop();
-    	double inc = 100.00/(_currentSet.size());
-    	int currprog = progressBarSet.getProgress();
-    	progressBarSet.setProgress(currprog + (int)Math.round(inc));
+    	mTextToSpeech.stop();
+    	double inc = 100.00/(mCurrentSet.size());
+    	int currprog = mProgressBar.getProgress();
+    	mProgressBar.setProgress(currprog + (int)Math.round(inc));
     	
-    	_currentIndex++;
-		_rhymeUsed = 0;
+    	mCurrentIndex++;
+		mRhymeUsed = 0;
 		if(checkEndOfSet() == true){
 			return;
 		}
@@ -519,8 +518,8 @@ public class MainActivity extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		_numHintsUsed = 0;
-		_numTries = 0;
+		mNumHintsUsed = 0;
+		mNumTries = 0;
 		}
     }
     
@@ -530,41 +529,41 @@ public class MainActivity extends Activity {
      */
     private boolean checkEndOfSet(){
     	boolean end = false;
-    	if(_currentSet == null){
+    	if(mCurrentSet == null){
     		return true;
     	}
-    	if(_currentIndex >= _currentSet.size()){
+    	if(mCurrentIndex >= mCurrentSet.size()){
     		end = true;
 
     		//update scores info in db so that EndSet can get correct updated results
-    		if(_setScore > _scores.getHighScore(_currentPath)) {
-    			_scores.setHighScore(_currentPath, _setScore);
+    		if(mSetScore > mUserScores.getHighScore(mCurrentPath)) {
+    			mUserScores.setHighScore(mCurrentPath, mSetScore);
     		}
 
     		//check highest streak compared to current streak
-    		if(_scores.getHighestStreak() < _streak) {
-    			_scores.setHighestStreak(_streak);
-    			newStreak = true;
+    		if(mUserScores.getHighestStreak() < mStreak) {
+    			mUserScores.setHighestStreak(mStreak);
+    			mNewStreak = true;
     		}
     		
   		    finish();
   		    
   		    boolean newNumCorrect = false;
-    		int prevNumOfCorrectAnswers = _scores.getNumCompleted(_currentPath);
-    		if(_numCorrect > prevNumOfCorrectAnswers)
+    		int prevNumOfCorrectAnswers = mUserScores.getNumCompleted(mCurrentPath);
+    		if(mNumCorrect > prevNumOfCorrectAnswers)
     		{
-    			_scores.setNumCompleted(_currentPath, _numCorrect);
+    			mUserScores.setNumCompleted(mCurrentPath, mNumCorrect);
     			newNumCorrect = true;
     		}
 
-    		_scores.setTotalScore(_totalScore);
+    		mUserScores.setTotalScore(mTotalScore);
     		
     		Intent i = new Intent(this, EndSet.class);
-    		i.putExtra("set", _currentPath);
-    		i.putExtra("setscore", _setScore);
-    		i.putExtra("newstreak", newStreak);
+    		i.putExtra("set", mCurrentPath);
+    		i.putExtra("setscore", mSetScore);
+    		i.putExtra("newstreak", mNewStreak);
     		i.putExtra("newNumCorrect", newNumCorrect);
-    		i.putExtra("numCorrect", _numCorrect);
+    		i.putExtra("numCorrect", mNumCorrect);
     		startActivityForResult(i,2);
     	}
     	return end;
@@ -577,9 +576,9 @@ public class MainActivity extends Activity {
         case 1:  //speech recognition result
             if (resultCode == RESULT_OK && data != null) {
                 ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                String correctAnswer = _currentSet.get(_currentIndex);
+                String correctAnswer = mCurrentSet.get(mCurrentIndex);
                 
-                userGuess = result.get(0);
+                mUserGuess = result.get(0);
                 for(String str: result)
                 {
                 	if(str.equals(correctAnswer) || str.contains(correctAnswer))
@@ -620,76 +619,76 @@ public class MainActivity extends Activity {
 		TextView feedbacktext = (TextView) dialog_view.findViewById(R.id.dialog_feedback);
 		TextView pointstext = (TextView) dialog_view.findViewById(R.id.dialog_points);
 		TextView hintstext = (TextView) dialog_view.findViewById(R.id.dialog_hints);
-		dialogsetscoretext = (TextView) dialog_view.findViewById(R.id.dialog_setscore);
+		mDialogScoreTextView = (TextView) dialog_view.findViewById(R.id.dialog_setscore);
 
 		if(isSuccess) {  //only give them continue button if they got it right
-			_numCorrect++;
+			mNumCorrect++;
 			
 			resulttext.setText("Correct!");
 			icon.setImageResource(R.drawable.checkmark);
 			feedbacktext.setText("You said: " + word_said);
 			pointstext.setText("+ 3");
-			hintstext.setText("- " + Integer.toString(_numHintsUsed));
-			dialogsetscoretext.setText(Integer.toString(_setScore));
-			dialogsetscoretext.setTextColor(getResources().getColor(R.color.yellow));
+			hintstext.setText("- " + Integer.toString(mNumHintsUsed));
+			mDialogScoreTextView.setText(Integer.toString(mSetScore));
+			mDialogScoreTextView.setTextColor(getResources().getColor(R.color.yellow));
 			
 			//call the asynctask to increment the previous total to the new total
-			new IncScore().execute(_setScore, _setScore + 3 - _numHintsUsed, 3 - _numHintsUsed);
+			new IncrementScoreAsyncTask().execute(mSetScore, mSetScore + 3 - mNumHintsUsed, 3 - mNumHintsUsed);
 			
-			_feedbackResult="continue";
+			mFeedbackResult="continue";
 
 			b.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
 
 				public void onClick(DialogInterface dialog, int which) {
-					_setScore += 3-_numHintsUsed;
-					_totalScore += 3-_numHintsUsed;
-					_streak++;
-		        	TextView st = (TextView) findViewById(R.id.score);
+					mSetScore += 3-mNumHintsUsed;
+					mTotalScore += 3-mNumHintsUsed;
+					mStreak++;
+		        	TextView mScoreTextView = (TextView) findViewById(R.id.score);
 
-		        	st.setText(Integer.toString(_setScore));
+		        	mScoreTextView.setText(Integer.toString(mSetScore));
 		        	
-		        	if(_numHintsUsed < 3)
+		        	if(mNumHintsUsed < 3)
 		        		animateScore();
 		    		
-		        	statsDb.addStat(_currentSet.get(_currentIndex), _numTries, _numHintsUsed, hintWordUsed, hintPhraseUsed, hintRhymeUsed, userGuess, 1);
-		        	hintWordUsed = 0;
-		        	hintPhraseUsed = 0;
-		        	hintRhymeUsed = 0;
-		        	userGuess = new String();
+		        	mStatsDb.addStat(mCurrentSet.get(mCurrentIndex), mNumTries, mNumHintsUsed, mHintWordUsed, mHintPhraseUsed, mHintRhymeUsed, mUserGuess, 1);
+		        	mHintWordUsed = 0;
+		        	mHintPhraseUsed = 0;
+		        	mHintRhymeUsed = 0;
+		        	mUserGuess = new String();
 		        	nextImage();
 				}
 			});
 
 		}
-		else if(isSuccess == false && _numTries >= 2) {  //got it wrong, but time to move on
+		else if(isSuccess == false && mNumTries >= 2) {  //got it wrong, but time to move on
 			
 			resulttext.setText("Try the next picture!");
 			resulttext.setTextSize(30);
 			icon.setImageResource(R.drawable.wrong);
-			feedbacktext.setText("The correct answer was: " + _currentSet.get(_currentIndex));
+			feedbacktext.setText("The correct answer was: " + mCurrentSet.get(mCurrentIndex));
 			pointstext.setVisibility(View.INVISIBLE);
 			hintstext.setVisibility(View.INVISIBLE);
-			dialogsetscoretext.setText(Integer.toString(_setScore));
+			mDialogScoreTextView.setText(Integer.toString(mSetScore));
 			
-			_feedbackResult="continue";
+			mFeedbackResult="continue";
 
 			b.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
 
 				public void onClick(DialogInterface dialog, int which) {
 
 					//check if streak that just ended was the highest
-					if(_scores.getHighestStreak() < _streak) {
-						_scores.setHighestStreak(_streak);
-						newStreak = true;
+					if(mUserScores.getHighestStreak() < mStreak) {
+						mUserScores.setHighestStreak(mStreak);
+						mNewStreak = true;
 					}
 
-		        	statsDb.addStat(_currentSet.get(_currentIndex), _numTries, _numHintsUsed, hintWordUsed, hintPhraseUsed, hintRhymeUsed, userGuess, 0);
-		        	hintWordUsed = 0;
-		        	hintPhraseUsed = 0;
-		        	hintRhymeUsed = 0;
-		        	userGuess = new String();
+		        	mStatsDb.addStat(mCurrentSet.get(mCurrentIndex), mNumTries, mNumHintsUsed, mHintWordUsed, mHintPhraseUsed, mHintRhymeUsed, mUserGuess, 0);
+		        	mHintWordUsed = 0;
+		        	mHintPhraseUsed = 0;
+		        	mHintRhymeUsed = 0;
+		        	mUserGuess = new String();
 		        	
-					_streak = 0;
+					mStreak = 0;
 					nextImage();
 				}
 			});
@@ -702,31 +701,31 @@ public class MainActivity extends Activity {
 			feedbacktext.setText("You said: " + word_said);
 			pointstext.setVisibility(View.INVISIBLE);
 			hintstext.setVisibility(View.INVISIBLE);
-			dialogsetscoretext.setText(Integer.toString(_setScore));
+			mDialogScoreTextView.setText(Integer.toString(mSetScore));
 			
-			_feedbackResult="again";
+			mFeedbackResult="again";
 
 			b.setNegativeButton("Try Again", new DialogInterface.OnClickListener() {
 
 				public void onClick(DialogInterface dialog, int which) {
-					_numTries++;
+					mNumTries++;
 					//check if streak that just ended was the highest
-					if(_scores.getHighestStreak() < _streak) {
-						_scores.setHighestStreak(_streak);
-						newStreak = true;
+					if(mUserScores.getHighestStreak() < mStreak) {
+						mUserScores.setHighestStreak(mStreak);
+						mNewStreak = true;
 					}
 					
-		        	statsDb.addStat(_currentSet.get(_currentIndex), _numTries, _numHintsUsed, hintWordUsed, hintPhraseUsed, hintRhymeUsed, userGuess, 0); 
-		        	userGuess = new String();
+		        	mStatsDb.addStat(mCurrentSet.get(mCurrentIndex), mNumTries, mNumHintsUsed, mHintWordUsed, mHintPhraseUsed, mHintRhymeUsed, mUserGuess, 0); 
+		        	mUserGuess = new String();
 		        	
-					_streak = 0;
+					mStreak = 0;
 				}
 			});	
 		}
 		
 		b.setView(dialog_view);
-		ad = b.create();
-		ad.show();  //show the dialog
+		mAlertDialog = b.create();
+		mAlertDialog.show();  //show the dialog
 		
 
 		//play the audio feedback
@@ -737,27 +736,27 @@ public class MainActivity extends Activity {
 			mp.setOnCompletionListener(new OnCompletionListener() {
 
 				public void onCompletion(MediaPlayer mp) {
-					soundGenerator.speak("Great Job!", TextToSpeech.QUEUE_FLUSH, null);
+					mTextToSpeech.speak("Great Job!", TextToSpeech.QUEUE_FLUSH, null);
 				}
 			});
 		}
-		else if(_feedbackResult.equals("continue")) {
-			soundGenerator.speak("So close! You'll get it next time.", TextToSpeech.QUEUE_FLUSH, null);
+		else if(mFeedbackResult.equals("continue")) {
+			mTextToSpeech.speak("So close! You'll get it next time.", TextToSpeech.QUEUE_FLUSH, null);
 		}
-		else if(_feedbackResult.equals("again")) {
-			soundGenerator.speak("Almost!  Try again", TextToSpeech.QUEUE_FLUSH, null);
+		else if(mFeedbackResult.equals("again")) {
+			mTextToSpeech.speak("Almost!  Try again", TextToSpeech.QUEUE_FLUSH, null);
 		}
 	}
 
 	public void animateScore() {
-    	st.setTextColor(getResources().getColor(R.color.green));
-    	st.setTypeface(null, Typeface.BOLD);
-    	st.setTextSize(40);
+    	mScoreTextView.setTextColor(getResources().getColor(R.color.green));
+    	mScoreTextView.setTypeface(null, Typeface.BOLD);
+    	mScoreTextView.setTextSize(40);
     	
 		RotateAnimation rotateTextAnimation = new RotateAnimation(0, 360, 40, 30);
 		rotateTextAnimation.setDuration(2000);
 		
-		st.startAnimation(rotateTextAnimation);
+		mScoreTextView.startAnimation(rotateTextAnimation);
 		Handler mHandler = new Handler();
 		mHandler.postDelayed(runnable, 3000);
 	
@@ -767,9 +766,9 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void run() {
-			st.setTextColor(getResources().getColor(R.color.yellow));
-			st.setTypeface(null, Typeface.NORMAL);
-			st.setTextSize(40);
+			mScoreTextView.setTextColor(getResources().getColor(R.color.yellow));
+			mScoreTextView.setTypeface(null, Typeface.NORMAL);
+			mScoreTextView.setTextSize(40);
 		}
 		
 	};
@@ -777,16 +776,16 @@ public class MainActivity extends Activity {
 
 	   @Override
 	   protected void onDestroy() {
-		  _currentIndex = 0;
-		  if(soundGenerator != null){
-			  _listenerIsReady = false;
-			  soundGenerator.stop();
-			  soundGenerator.shutdown(); 
-			  soundGenerator = null;
+		  mCurrentIndex = 0;
+		  if(mTextToSpeech != null){
+			  mListenerIsReady = false;
+			  mTextToSpeech.stop();
+			  mTextToSpeech.shutdown(); 
+			  mTextToSpeech = null;
 		  }
 		  
-		  statsDb.close();
-		  _scores.closeDb();
+		  mStatsDb.close();
+		  mUserScores.closeDb();
 	      super.onDestroy();
 
 	   }
@@ -809,11 +808,11 @@ public class MainActivity extends Activity {
 	    }
 
 		public AsyncTask.Status getDownloadHintsStatus() {
-			return downloadHints.getStatus();
+			return mDownloadHintsTask.getStatus();
 		}
 
 		public AsyncTask.Status getDownloadFilesStatus() {
-			return downloadFiles.getStatus();
+			return mDownloadFilesTask.getStatus();
 		}
 		
 		
@@ -822,7 +821,7 @@ public class MainActivity extends Activity {
 		 * Takes in prev_total, new_total and counts 
 		 * prev_total up to new_total.
 		 */
-		private class IncScore extends AsyncTask<Integer, Integer, Void> {		
+		private class IncrementScoreAsyncTask extends AsyncTask<Integer, Integer, Void> {		
 			
 			protected Void doInBackground(Integer... scores) {
 				
@@ -830,7 +829,7 @@ public class MainActivity extends Activity {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {}
 				
-				while(this.isCancelled() == false && scores[0] <= scores[1]) {	
+				while(!this.isCancelled() && scores[0] <= scores[1]) {	
 					
 					publishProgress(scores[0]); //Android calls onProgressUpdate
 					scores[0]++;
@@ -846,7 +845,7 @@ public class MainActivity extends Activity {
 			
 			
 			protected void onProgressUpdate(Integer... current) {
-				dialogsetscoretext.setText(current[0].toString());
+				mDialogScoreTextView.setText(current[0].toString());
 			}
 			
 			protected void onPostExecute(Void voids) {
